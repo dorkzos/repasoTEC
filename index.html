@@ -6,10 +6,39 @@
     <title>Document</title>
 </head>
 <body>
-    <h1> Lista de Digimon </h1>
-    <button id ="getDigimonBtn"> Obtener Digimon </button>
-    <p id="loading" style="display: none ;"> Cargando  </p>
+    <h1>Lista de Digimon</h1>
+    <button id="getDigimonBtn">Obtener Digimon</button>
+    <p id="loading" style="display: none;">Cargando...</p>
 
-    
+    <ul id="digimonList"></ul>
+
+    <script>
+        document.getElementById('getDigimonBtn').addEventListener('click', function() {
+            document.getElementById('loading').style.display = 'block';
+            
+            fetch('https://digimon-api.vercel.app/api/digimon')
+            .then(response => response.json())
+            .then(data => {
+                const digimonList = document.getElementById('digimonList');
+                digimonList.innerHTML = '';  // Limpiar lista antes de agregar nuevos elementos
+                
+                // Iterar sobre cada Digimon
+                data.forEach(digimon => {
+                    const li = document.createElement('li');  // Crear nuevo li para cada elemento
+                    li.innerHTML = `
+                        <p><strong>${digimon.name}</strong> - Nivel: ${digimon.level}</p>
+                    `;
+                    digimonList.appendChild(li);  // Agregar a la lista
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al obtener los datos');
+            })
+            .finally(() => {
+                document.getElementById('loading').style.display = 'none';  // Ocultar carga
+            });
+        });
+    </script>
 </body>
 </html>
